@@ -237,3 +237,10 @@ D:\UnityProj\EnigmaDoEther\Enigma do Ether\obj\Debug\Assembly-CSharp.csproj.Core
 D:\UnityProj\EnigmaDoEther\Enigma do Ether\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 D:\UnityProj\EnigmaDoEther\Enigma do Ether\obj\Debug\Assembly-CSharp.dll
 D:\UnityProj\EnigmaDoEther\Enigma do Ether\obj\Debug\Assembly-CSharp.pdb
+D:\UnityProj\EnigmaDoEther\Enigma do Ether\Temp\bin\Debug\ChannelPurchase.dll
+D:\UnityProj\EnigmaDoEther\Enigma do Ether\Temp\bin\Debug\Editor.dll
+D:\UnityProj\EnigmaDoEther\Enigma do Ether\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.dll
+D:\UnityProj\EnigmaDoEther\Enigma do Ether\Temp\bin\Debug\UnityStore.dll
+D:\UnityProj\EnigmaDoEther\Enigma do Ether\Temp\bin\Debug\XiaomiSupport.dll
+D:\UnityProj\EnigmaDoEther\Enigma do Ether\Temp\bin\Debug\Editor.pdb
+D:\UnityProj\EnigmaDoEther\Enigma do Ether\Temp\bin\Debug\XiaomiSupport.pdb

@@ -488,16 +488,16 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   objFase: []
   AudioDialog: {fileID: 575727298}
   AudioAmbient: {fileID: 1518656653}
   TutorialMoveInteract: {fileID: 0}
   a1: {fileID: 8300000, guid: 415b4475b5cbf63449adfff7f645ad3d, type: 3}
+  lookupaudios: []
   AudioEnigma2: []
   AudioEnigma1: []
   AudioTutorial: []
+  AmbientClips: []
 --- !u!4 &1617977615
 Transform:
   m_ObjectHideFlags: 0
