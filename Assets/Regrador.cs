@@ -30,7 +30,7 @@ public class Regrador : MonoBehaviour
 
     //audios de interação:
     public AudioClip[] lookupaudios = { }; //colocar aqui audios de lookup | 0 = tutorial | 1 = fase 1 | 2 = fase 2 |
-    public AudioClip[] AudioEnigma2 = { }; //colocar aqui audios de interação com objeto do enigma 2
+    public AudioClip[] AudioEnigma2 = { }; //colocar aqui audios de interação com objeto do enigma 2 | 0 = ligado | 1 = desligado | 
     public AudioClip[] AudioEnigma1 = { }; // 0 = audio abriu palha pegou isqueiro. | 1 = audio madeira pegou fogo surgiu martelo | 2 = audio martelo quebrou vidro surgiu chave | 3 = audio falha no 0 | 4 - audio falha reset
     public AudioClip[] AudioTutorial = { }; // 0 = rockmove | 1 = rockplace
     public AudioClip[] AmbientClips = { };
@@ -249,7 +249,7 @@ public class Regrador : MonoBehaviour
             Debug.Log(objFase[0].getValue() + "-" + objFase[1].getValue() + "-" + objFase[2].getValue() + "-" + objFase[3].getValue()); //DEBUG 
 
 
-        }
+        } else
         if (fase == 1)
         {
             Interativo[] tempobj = { objFase[0], objFase[1], objFase[2], objFase[3] };
@@ -278,6 +278,31 @@ public class Regrador : MonoBehaviour
             objFase[1] = tempobj[0]; // item 2 = palha
             objFase[2] = tempobj[3]; // item 3 = metal
             objFase[3] = tempobj[2]; // item 4 = vidro
+
+            Debug.Log(objFase[0].getValue() + "-" + objFase[1].getValue() + "-" + objFase[2].getValue() + "-" + objFase[3].getValue()); //DEBUG 
+        } else
+        if (fase == 2)
+        {
+            Interativo[] tempobj = { objFase[0], objFase[1]};
+
+            foreach (Interativo it in objFase)
+            {
+                if (it.getValue() == "on")
+                {
+                    tempobj[0] = it;
+                    tempobj[2] = it;
+                }
+                else if (it.getValue() == "off")
+                {
+                    tempobj[1] = it;
+                    tempobj[3] = it;
+                }
+            }
+
+            objFase[0] = tempobj[0]; // item 1 = ON
+            objFase[1] = tempobj[1]; // item 2 = OFF
+            objFase[2] = tempobj[2]; // item 3 = ON
+            objFase[3] = tempobj[3]; // item 4 = OFF
 
             Debug.Log(objFase[0].getValue() + "-" + objFase[1].getValue() + "-" + objFase[2].getValue() + "-" + objFase[3].getValue()); //DEBUG 
         }
@@ -363,91 +388,106 @@ public class Regrador : MonoBehaviour
             switch (fase)
             {
                 case 0:
-                    if (carrying == false)
                     {
-                        objcarry = CurrentPosition;
-                        carrying = true;
-                        AudioDialog.clip = TutorialMoveInteract; //som de mover objeto no tutorial
-                        WinCondition(fase);
+                        if (carrying == false)
+                        {
+                            objcarry = CurrentPosition;
+                            carrying = true;
+                            AudioDialog.clip = TutorialMoveInteract; //som de mover objeto no tutorial
+                            WinCondition(fase);
+                        }
+                        else
+                        {
+                            carrying = false;
+                            Interativo temp = objFase[CurrentPosition];
+                            objFase[CurrentPosition] = objFase[objcarry];
+                            objFase[objcarry] = temp;
+                            WinCondition(fase);
+                        }
+                        break;
                     }
-                    else
-                    {
-                        carrying = false;
-                        Interativo temp = objFase[CurrentPosition];
-                        objFase[CurrentPosition] = objFase[objcarry];
-                        objFase[objcarry] = temp;
-                        WinCondition(fase);
-                    }
-                    break;
                 case 1:
-                    switch (fase2counter)
                     {
-                        case 0:
-                            {
-                                if (objFase[CurrentPosition].value == "palha")
+                        switch (fase2counter)
+                        {
+                            case 0:
                                 {
-                                    fase2counter = 1;
-                                    AudioDialog.clip = AudioEnigma1[0]; // conseguiu, dentro da palha tem isqueiro.
-                                    AudioDialog.Play();
+                                    if (objFase[CurrentPosition].value == "palha")
+                                    {
+                                        fase2counter = 1;
+                                        AudioDialog.clip = AudioEnigma1[0]; // conseguiu, dentro da palha tem isqueiro.
+                                        AudioDialog.Play();
+                                    }
+                                    else
+                                    {
+                                        AudioDialog.clip = AudioEnigma1[3]; // falhou no 0
+                                        AudioDialog.Play();
+                                    }
+                                    break;
                                 }
-                                else
+                            case 1:
                                 {
-                                    AudioDialog.clip = AudioEnigma1[3]; // falhou no 0
-                                    AudioDialog.Play();
+                                    if (objFase[CurrentPosition].value == "madeira")
+                                    {
+                                        fase2counter = 2;
+                                        AudioDialog.clip = AudioEnigma1[1]; // conseguiu, queimou madeira surgiu martelo
+                                        AudioDialog.Play();
+                                    }
+                                    else
+                                    {
+                                        AudioDialog.clip = AudioEnigma1[4]; // oh não, as caixas se restauraram e os itens sumiram!
+                                        AudioDialog.Play();
+                                        fase2counter = 0;
+                                    }
+                                    break;
                                 }
-                                break;
-                            }
-                        case 1:
-                            {
-                                if (objFase[CurrentPosition].value == "madeira")
+                            case 2:
                                 {
-                                    fase2counter = 2;
-                                    AudioDialog.clip = AudioEnigma1[1]; // conseguiu, queimou madeira surgiu martelo
-                                    AudioDialog.Play();
+                                    if (objFase[CurrentPosition].value == "vidro")
+                                    {
+                                        fase2counter = 3;
+                                        AudioDialog.clip = AudioEnigma1[2]; // conseguiu, quebrou vidro e pegou a chave dentro
+                                        AudioDialog.Play();
+                                    }
+                                    else
+                                    {
+                                        AudioDialog.clip = AudioEnigma1[4]; // oh não, as caixas se restauraram e os itens sumiram!
+                                        AudioDialog.Play();
+                                        fase2counter = 0;
+                                    }
+                                    break;
                                 }
-                                else
+                            case 3:
                                 {
-                                    AudioDialog.clip = AudioEnigma1[4]; // oh não, as caixas se restauraram e os itens sumiram!
-                                    AudioDialog.Play();
-                                    fase2counter = 0;
+                                    if (objFase[CurrentPosition].value == "metal")
+                                    {
+                                        fase2counter = 4;
+                                    }
+                                    else
+                                    {
+                                        AudioDialog.clip = AudioEnigma1[4]; // oh não, as caixas se restauraram e os itens sumiram!
+                                        AudioDialog.Play();
+                                        fase2counter = 0;
+                                    }
+                                    break;
                                 }
-                                break;
-                            }
-                        case 2:
-                            {
-                                if (objFase[CurrentPosition].value == "vidro")
-                                {
-                                    fase2counter = 3;
-                                    AudioDialog.clip = AudioEnigma1[2]; // conseguiu, quebrou vidro e pegou a chave dentro
-                                    AudioDialog.Play();
-                                }
-                                else
-                                {
-                                    AudioDialog.clip = AudioEnigma1[4]; // oh não, as caixas se restauraram e os itens sumiram!
-                                    AudioDialog.Play();
-                                    fase2counter = 0;
-                                }
-                                break;
-                            }
-                        case 3:
-                            {
-                                if (objFase[CurrentPosition].value == "metal")
-                                {
-                                    fase2counter = 4;
-                                }
-                                else
-                                {
-                                    AudioDialog.clip = AudioEnigma1[4]; // oh não, as caixas se restauraram e os itens sumiram!
-                                    AudioDialog.Play();
-                                    fase2counter = 0;
-                                }
-                                break;
-                            }
+                        }
+                        WinCondition(fase);
+                        break;
                     }
-                    WinCondition(fase);
-                    break;
                 case 2:
-                    break;
+                    {
+                        for (int i = CurrentPosition-1; i <= CurrentPosition+1; i++)
+                            if(objFase[CurrentPosition].getValue() == "on")
+                        {
+                            objFase[CurrentPosition].value = "off";
+                        }   else if(objFase[CurrentPosition].getValue() == "off")
+                            {
+                                objFase[CurrentPosition].value = "on";
+                            }
+                        WinCondition(fase);
+                        break;
+                    }
             }
         }
     }
@@ -459,39 +499,63 @@ public class Regrador : MonoBehaviour
         {
 
             AudioDialog.Stop();
-            
-           
-            //5 é liberado para outro lookup
+
+            if (fase == 0 || fase == 1)
+            {
+
+                //5 é liberado para outro lookup
                 AudioDialog.clip = lookupaudios[fase];
                 AudioDialog.Play();
                 StartCoroutine(lookuprotina()); //toca audio da fase inteiro
 
 
-            AudioDialog.Stop();
-            AudioDialog.clip = objFase[0].audSolo;
+                AudioDialog.Stop();
+                AudioDialog.clip = objFase[0].audSolo;
+                AudioDialog.Play();
+
+                StartCoroutine(lookuprotina()); //toca audio do obj 1
+
+
+                AudioDialog.Stop();
+                AudioDialog.clip = objFase[1].audSolo;
+                AudioDialog.Play();
+
+                StartCoroutine(lookuprotina()); // toca audio do objeto 2
+
+                AudioDialog.Stop();
+                AudioDialog.clip = objFase[2].audSolo;
+                AudioDialog.Play();
+
+                StartCoroutine(lookuprotina()); // toca audio do objeto 3
+
+                AudioDialog.Stop();
+                AudioDialog.clip = objFase[3].audSolo;
+                AudioDialog.Play();
+
+                StartCoroutine(lookuprotina()); // toca audio do objeto 4
+            } else if(fase == 2)
+                {
+                AudioDialog.clip = lookupaudios[fase];
+                AudioDialog.Play();
+                StartCoroutine(lookuprotina()); //temporizar fim do audio para ir pra próxima parte.
+
+                for (int i = 0; i <= 3; i++)
+                {
+                    AudioDialog.Stop();
+                    if (objFase[i].value == "on")
+                    {
+                        AudioDialog.clip = AudioEnigma2[0];
+                    }
+                    else if (objFase[i].value == "off")
+                    {
+                        AudioDialog.clip = AudioEnigma2[1];
+                    }
                     AudioDialog.Play();
 
-            StartCoroutine(lookuprotina()); //toca audio do obj 1
-
-
-            AudioDialog.Stop();
-            AudioDialog.clip = objFase[1].audSolo; 
-                    AudioDialog.Play();
-
-            StartCoroutine(lookuprotina()); // toca audio do objeto 2
-
-            AudioDialog.Stop();
-            AudioDialog.clip = objFase[2].audSolo; 
-                    AudioDialog.Play();
-
-            StartCoroutine(lookuprotina()); // toca audio do objeto 3
-
-            AudioDialog.Stop();
-            AudioDialog.clip = objFase[3].audSolo; 
-                    AudioDialog.Play();
-
-            StartCoroutine(lookuprotina()); // toca audio do objeto 4
-
+                    StartCoroutine(lookuprotina());
+                }
+                
+                }
 
         }
     }
@@ -525,6 +589,16 @@ public class Regrador : MonoBehaviour
                     {
                         gamestate = 6;
                         vt_fase1_solved = true;
+                    }
+                    break;
+                }
+            case 2:
+                {
+                    string testeresultado = objFase[0].getValue() + "-" + objFase[1].getValue() + "-" + objFase[2].getValue() + "-" + objFase[3].getValue();
+                    if (testeresultado == "on-on-on-on")
+                    {
+                        gamestate = 7;
+                        vt_fase2_solved = true;
                     }
                     break;
                 }
