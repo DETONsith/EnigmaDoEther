@@ -482,12 +482,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ec8356a5bda014a40a63fb176d99b2a7, type: 2}
   - {fileID: 11400000, guid: fbf390804f27de944bd0bb2a0eac1bc7, type: 2}
   - {fileID: 11400000, guid: 45efc26d14cc7a6478d63323eb9d8170, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 4b7a2266b1eb7cd47bce8396c48ce8fe, type: 2}
+  - {fileID: 11400000, guid: 92ff88b281db44a419dd0c9dc13344c2, type: 2}
+  - {fileID: 11400000, guid: cc9d64260cc4d3d48828f03df75c2ff3, type: 2}
+  - {fileID: 11400000, guid: 58748a888e93a9847ace617e9c995866, type: 2}
+  - {fileID: 11400000, guid: c3390114566ed494ea0e4a936a6d575e, type: 2}
+  - {fileID: 11400000, guid: 55259b2623609f840878bda6a90c3bf7, type: 2}
   objFase: []
   AudioDialog: {fileID: 575727298}
   AudioAmbient: {fileID: 1518656653}

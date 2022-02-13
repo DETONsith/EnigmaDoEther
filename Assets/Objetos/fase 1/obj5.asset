@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 4
   level: 1
-  value: Tecido
+  value: palha
   audLook: {fileID: 0}
   audSolo: {fileID: 0}

@@ -30,7 +30,7 @@ public class Regrador : MonoBehaviour
 
     //audios de interação:
     public AudioClip[] lookupaudios = { }; //colocar aqui audios de lookup | 0 = tutorial | 1 = fase 1 | 2 = fase 2 |
-    public AudioClip[] AudioEnigma2 = { }; //colocar aqui audios de interação com objeto do enigma 2 | 0 = ligado | 1 = desligado | 
+    public AudioClip[] AudioEnigma2 = { }; //colocar aqui audios de interação com objeto do enigma 2 | 0 = ligado | 1 = desligado | 2 = efeito ligando | 3 = efeito desligando
     public AudioClip[] AudioEnigma1 = { }; // 0 = audio abriu palha pegou isqueiro. | 1 = audio madeira pegou fogo surgiu martelo | 2 = audio martelo quebrou vidro surgiu chave | 3 = audio falha no 0 | 4 - audio falha reset
     public AudioClip[] AudioTutorial = { }; // 0 = rockmove | 1 = rockplace
     public AudioClip[] AmbientClips = { };
@@ -94,6 +94,7 @@ public class Regrador : MonoBehaviour
         {
             // AudioDialog.clip = (audio confirmação iniciar jogo);
             AudioDialog.Play();
+            Debug.Log("AUDIO LOG > Confirmação de início");
             gamestate = 1;
         }
         else if(gamestate == 1 && gamestarted == true)
@@ -101,12 +102,14 @@ public class Regrador : MonoBehaviour
             AudioDialog.Stop();
             //AudioDialog.clip = (audio introdução + fala pra swipe)
             AudioDialog.Play();
+            Debug.Log("AUDIO LOG > Introdução tutorial swipe");
             if (AudioAmbient.isPlaying)
             {
                 AudioAmbient.Stop();
             }
             AudioAmbient.clip = AmbientClips[0];
             AudioAmbient.Play();
+            Debug.Log("AUDIO LOG > Ambiente tutorial");
             gamestate = 2;
             canswipe = true;
         }
@@ -116,6 +119,7 @@ public class Regrador : MonoBehaviour
                 AudioDialog.Stop();
                 //AudioDialog.clip = (audio fala pra interagir)
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > tutorial interagir");
                 gamestate = 3;
             }
         }
@@ -125,6 +129,7 @@ public class Regrador : MonoBehaviour
                 AudioDialog.Stop();
                 //AudioDialog.clip = (audio fala pra lookup)
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > Tutorial lookup");
                 gamestate = 4;
             }
         }
@@ -134,6 +139,7 @@ public class Regrador : MonoBehaviour
                 AudioDialog.Stop();
                 //AudioDialog.clip = (audio fala pra resolver o enigma)
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > Tutorial: termine o enigma");
                 gamestate = 5;
             }
         }
@@ -144,6 +150,7 @@ public class Regrador : MonoBehaviour
                 AudioDialog.Stop();
                 //AudioDialog.clip = (Audio finalização tutorial e introdução fase 1)
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > Fim tutorial e introdução fase 1");
 
                 if (AudioAmbient.isPlaying)
                 {
@@ -151,6 +158,7 @@ public class Regrador : MonoBehaviour
                 }
                 AudioAmbient.clip = AmbientClips[1];
                 AudioAmbient.Play();
+                Debug.Log("AUDIO LOG > Ambiente fase 1");
 
                 gamestate = 6;
                 fase = 1;
@@ -164,12 +172,14 @@ public class Regrador : MonoBehaviour
                 AudioDialog.Stop();
                 //AudioDialog.clip = (Audio finalização fase 1 e introdução fase 2)
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > fim fase 1 e introdução fase 2");
                 if (AudioAmbient.isPlaying)
                 {
                     AudioAmbient.Stop();
                 }
                 AudioAmbient.clip = AmbientClips[2];
                 AudioAmbient.Play();
+                Debug.Log("AUDIO LOG > Ambiente fase 2");
                 gamestate = 7;
             }
             
@@ -185,6 +195,7 @@ public class Regrador : MonoBehaviour
                 }
                 //AudioDialog.clip = (Audio finalização fase 2, agradecimento, toque simples para sair )
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > fim do jogo");
                 gamestate = 8;
                 caninteract = false;
                 canlookup = false;
@@ -344,6 +355,8 @@ public class Regrador : MonoBehaviour
             AudioDialog.Stop();
             AudioDialog.clip = objFase[CurrentPosition].getLook();
             AudioDialog.Play();
+            Debug.Log("AUDIO LOG > move left");
+            Debug.Log("STATE LOG > Posição: "+CurrentPosition.ToString());
         }
         if (gamestate == 3) //                                        
         {
@@ -364,6 +377,8 @@ public class Regrador : MonoBehaviour
                 AudioDialog.Stop();
                 AudioDialog.clip = objFase[CurrentPosition].getLook();
                 AudioDialog.Play();
+            Debug.Log("AUDIO LOG > move right");
+            Debug.Log("STATE LOG > Posição: " + CurrentPosition.ToString());
 
         }
     }
@@ -394,6 +409,7 @@ public class Regrador : MonoBehaviour
                             objcarry = CurrentPosition;
                             carrying = true;
                             AudioDialog.clip = TutorialMoveInteract; //som de mover objeto no tutorial
+                            Debug.Log("STATE LOG > pegou objeto");
                             WinCondition(fase);
                         }
                         else
@@ -402,6 +418,7 @@ public class Regrador : MonoBehaviour
                             Interativo temp = objFase[CurrentPosition];
                             objFase[CurrentPosition] = objFase[objcarry];
                             objFase[objcarry] = temp;
+                            Debug.Log("STATE LOG > trocou objeto");
                             WinCondition(fase);
                         }
                         break;
@@ -417,11 +434,14 @@ public class Regrador : MonoBehaviour
                                         fase2counter = 1;
                                         AudioDialog.clip = AudioEnigma1[0]; // conseguiu, dentro da palha tem isqueiro.
                                         AudioDialog.Play();
+                                        Debug.Log("AUDIO LOG > pegou isqueiro na palha");
+
                                     }
                                     else
                                     {
                                         AudioDialog.clip = AudioEnigma1[3]; // falhou no 0
                                         AudioDialog.Play();
+                                        Debug.Log("AUDIO LOG > não conseguiu fazer nada");
                                     }
                                     break;
                                 }
@@ -432,11 +452,13 @@ public class Regrador : MonoBehaviour
                                         fase2counter = 2;
                                         AudioDialog.clip = AudioEnigma1[1]; // conseguiu, queimou madeira surgiu martelo
                                         AudioDialog.Play();
+                                        Debug.Log("AUDIO LOG > queimou madeira pegou martelo");
                                     }
                                     else
                                     {
                                         AudioDialog.clip = AudioEnigma1[4]; // oh não, as caixas se restauraram e os itens sumiram!
                                         AudioDialog.Play();
+                                        Debug.Log("AUDIO LOG > enigma se reiniciou");
                                         fase2counter = 0;
                                     }
                                     break;
@@ -448,11 +470,13 @@ public class Regrador : MonoBehaviour
                                         fase2counter = 3;
                                         AudioDialog.clip = AudioEnigma1[2]; // conseguiu, quebrou vidro e pegou a chave dentro
                                         AudioDialog.Play();
+                                        Debug.Log("AUDIO LOG > quebrou vidro pegou chave");
                                     }
                                     else
                                     {
                                         AudioDialog.clip = AudioEnigma1[4]; // oh não, as caixas se restauraram e os itens sumiram!
                                         AudioDialog.Play();
+                                        Debug.Log("AUDIO LOG > enigma se reiniciou");
                                         fase2counter = 0;
                                     }
                                     break;
@@ -467,6 +491,7 @@ public class Regrador : MonoBehaviour
                                     {
                                         AudioDialog.clip = AudioEnigma1[4]; // oh não, as caixas se restauraram e os itens sumiram!
                                         AudioDialog.Play();
+                                        Debug.Log("AUDIO LOG > enigma se reiniciou");
                                         fase2counter = 0;
                                     }
                                     break;
@@ -481,9 +506,17 @@ public class Regrador : MonoBehaviour
                             if(objFase[CurrentPosition].getValue() == "on")
                         {
                             objFase[CurrentPosition].value = "off";
+                                AudioDialog.Stop();
+                                AudioDialog.clip = AudioEnigma2[3];
+                                AudioDialog.Play();
+                                Debug.Log("AUDIO LOG > som desligando");
                         }   else if(objFase[CurrentPosition].getValue() == "off")
                             {
                                 objFase[CurrentPosition].value = "on";
+                                AudioDialog.Stop();
+                                AudioDialog.clip = AudioEnigma2[2];
+                                AudioDialog.Play();
+                                Debug.Log("AUDIO LOG > som ligando");
                             }
                         WinCondition(fase);
                         break;
@@ -506,12 +539,14 @@ public class Regrador : MonoBehaviour
                 //5 é liberado para outro lookup
                 AudioDialog.clip = lookupaudios[fase];
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > audio lookup fase");
                 StartCoroutine(lookuprotina()); //toca audio da fase inteiro
 
 
                 AudioDialog.Stop();
                 AudioDialog.clip = objFase[0].audSolo;
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > obj 1 = " + objFase[0].getValue());
 
                 StartCoroutine(lookuprotina()); //toca audio do obj 1
 
@@ -519,24 +554,28 @@ public class Regrador : MonoBehaviour
                 AudioDialog.Stop();
                 AudioDialog.clip = objFase[1].audSolo;
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > obj 2 = " + objFase[1].getValue());
 
                 StartCoroutine(lookuprotina()); // toca audio do objeto 2
 
                 AudioDialog.Stop();
                 AudioDialog.clip = objFase[2].audSolo;
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > obj 3 = " + objFase[2].getValue());
 
                 StartCoroutine(lookuprotina()); // toca audio do objeto 3
 
                 AudioDialog.Stop();
                 AudioDialog.clip = objFase[3].audSolo;
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > obj 4 = " + objFase[3].getValue());
 
                 StartCoroutine(lookuprotina()); // toca audio do objeto 4
             } else if(fase == 2)
                 {
                 AudioDialog.clip = lookupaudios[fase];
                 AudioDialog.Play();
+                Debug.Log("AUDIO LOG > audio lookup fase 2");
                 StartCoroutine(lookuprotina()); //temporizar fim do audio para ir pra próxima parte.
 
                 for (int i = 0; i <= 3; i++)
@@ -551,6 +590,7 @@ public class Regrador : MonoBehaviour
                         AudioDialog.clip = AudioEnigma2[1];
                     }
                     AudioDialog.Play();
+                    Debug.Log("AUDIO LOG > obj " + i.ToString() + " = " +objFase[i].getValue());
 
                     StartCoroutine(lookuprotina());
                 }
