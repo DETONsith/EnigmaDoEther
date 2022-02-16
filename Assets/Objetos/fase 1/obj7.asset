@@ -15,5 +15,5 @@ MonoBehaviour:
   id: 6
   level: 1
   value: vidro
-  audLook: {fileID: 0}
-  audSolo: {fileID: 0}
+  audLook: {fileID: 8300000, guid: 33a823ca516cad54e889a2b49ff5387a, type: 3}
+  audSolo: {fileID: 8300000, guid: 76d6517f3014dca47a7f7529376f3f4a, type: 3}

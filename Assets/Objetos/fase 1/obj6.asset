@@ -15,5 +15,5 @@ MonoBehaviour:
   id: 5
   level: 1
   value: madeira
-  audLook: {fileID: 0}
-  audSolo: {fileID: 0}
+  audLook: {fileID: 8300000, guid: 69066f5fdfe3e1b4cb0e7b7ebc926246, type: 3}
+  audSolo: {fileID: 8300000, guid: 813bda2bd39b44742a4dab71f377f45b, type: 3}

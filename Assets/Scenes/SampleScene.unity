@@ -352,7 +352,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -493,11 +493,37 @@ MonoBehaviour:
   AudioAmbient: {fileID: 1518656653}
   TutorialMoveInteract: {fileID: 0}
   a1: {fileID: 8300000, guid: 415b4475b5cbf63449adfff7f645ad3d, type: 3}
-  lookupaudios: []
-  AudioEnigma2: []
-  AudioEnigma1: []
+  lookupaudios:
+  - {fileID: 8300000, guid: b70ebc4a295e1264ab7877b30584bced, type: 3}
+  - {fileID: 8300000, guid: 6f034277423d5e444a1d83f35b73e44e, type: 3}
+  - {fileID: 8300000, guid: 4ea3e6783c23c5b4d9a9f1c6a50d9dbb, type: 3}
+  AudioEnigma2:
+  - {fileID: 8300000, guid: a5d46f5af1b33ed4da9e3e732a0e6a4f, type: 3}
+  - {fileID: 8300000, guid: b4b4448822398c247a1ae1fdb99b2cd2, type: 3}
+  - {fileID: 8300000, guid: db07ce9bfc736ff438500c2b46e5fb9f, type: 3}
+  - {fileID: 8300000, guid: 2f8805b6e12e75344877447ed8a62c22, type: 3}
+  AudioEnigma1:
+  - {fileID: 8300000, guid: 40a2c1311aef72343a8dc75d711304d8, type: 3}
+  - {fileID: 8300000, guid: d12de2c080e69d4468511aff8341b3be, type: 3}
+  - {fileID: 8300000, guid: 52f15acb61f875e49bdfefb7fa478826, type: 3}
+  - {fileID: 8300000, guid: 4f8325914d8344044b12f1ee99f5d4c0, type: 3}
+  - {fileID: 8300000, guid: 7bc94acbdad0f784cbcf20822d725869, type: 3}
   AudioTutorial: []
-  AmbientClips: []
+  AudiosRadio:
+  - {fileID: 8300000, guid: ffaf9ef4865ceb54eabd5066372281e4, type: 3}
+  - {fileID: 8300000, guid: 370b76afa83ce4d4688adf91821370c5, type: 3}
+  - {fileID: 8300000, guid: 3a281ba1557b4a649925e6a14900d56a, type: 3}
+  - {fileID: 8300000, guid: f4189aa5212597c44bd0ac4d807f0965, type: 3}
+  - {fileID: 8300000, guid: 3c1bfdd88edf50e4cab875d285739bce, type: 3}
+  - {fileID: 8300000, guid: 795227f5a1f21de46bea25640cccf7ff, type: 3}
+  - {fileID: 8300000, guid: cd872e170a789d14e9d539c415387ec7, type: 3}
+  - {fileID: 8300000, guid: 5ee729da918521346b473dcb5b5d24f2, type: 3}
+  - {fileID: 8300000, guid: d4d28514ee29de643be1bd97ca267420, type: 3}
+  - {fileID: 8300000, guid: e7d3b9292cdc27a4bb22978e7b9ead76, type: 3}
+  AmbientClips:
+  - {fileID: 8300000, guid: 9fc29a6b939582d4db64bc319b6ccb30, type: 3}
+  - {fileID: 8300000, guid: f854641b336d53b46b2e4deb2468f05d, type: 3}
+  - {fileID: 0}
 --- !u!4 &1617977615
 Transform:
   m_ObjectHideFlags: 0

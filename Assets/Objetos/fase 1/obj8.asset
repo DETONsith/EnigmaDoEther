@@ -15,5 +15,5 @@ MonoBehaviour:
   id: 7
   level: 1
   value: metal
-  audLook: {fileID: 0}
-  audSolo: {fileID: 0}
+  audLook: {fileID: 8300000, guid: 96f5a4f0fc5e40d409dc519ab74c2f6a, type: 3}
+  audSolo: {fileID: 8300000, guid: dbcd7a455c3dc174da7ffe15fd593c5a, type: 3}

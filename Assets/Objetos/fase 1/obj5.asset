@@ -15,5 +15,5 @@ MonoBehaviour:
   id: 4
   level: 1
   value: palha
-  audLook: {fileID: 0}
-  audSolo: {fileID: 0}
+  audLook: {fileID: 8300000, guid: b6f0f499400f59747b1edb03a0f78119, type: 3}
+  audSolo: {fileID: 8300000, guid: 096fa2eaf715f324ca9ad33b050f862c, type: 3}

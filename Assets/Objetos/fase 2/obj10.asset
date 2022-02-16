@@ -15,5 +15,5 @@ MonoBehaviour:
   id: 9
   level: 2
   value: off
-  audLook: {fileID: 0}
-  audSolo: {fileID: 0}
+  audLook: {fileID: 8300000, guid: 01183470c4b91404dbf7afab8c9fc8d4, type: 3}
+  audSolo: {fileID: 8300000, guid: b4b4448822398c247a1ae1fdb99b2cd2, type: 3}

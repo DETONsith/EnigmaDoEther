@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Regrador : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class Regrador : MonoBehaviour
     public AudioClip[] AudioEnigma2 = { }; //colocar aqui audios de interação com objeto do enigma 2 | 0 = ligado | 1 = desligado | 2 = efeito ligando | 3 = efeito desligando
     public AudioClip[] AudioEnigma1 = { }; // 0 = audio abriu palha pegou isqueiro. | 1 = audio madeira pegou fogo surgiu martelo | 2 = audio martelo quebrou vidro surgiu chave | 3 = audio falha no 0 | 4 - audio falha reset
     public AudioClip[] AudioTutorial = { }; // 0 = rockmove | 1 = rockplace
+    public AudioClip[] AudiosRadio = { }; 
     public AudioClip[] AmbientClips = { };
     
 
@@ -47,6 +49,7 @@ public class Regrador : MonoBehaviour
     private bool vt_fase1_solved;
     private bool vt_fase2_solved;
     private bool sair;
+    private bool looking;
 
 
 
@@ -59,6 +62,7 @@ public class Regrador : MonoBehaviour
         CurrentPosition = 0;
         gamestate = 0;
         fase2counter = 0;
+        looking = true;
 
         //variaveis da tristeza
         gamestarted = false;
@@ -92,16 +96,16 @@ public class Regrador : MonoBehaviour
     {
         if (gamestate == 0)
         {
-            // AudioDialog.clip = (audio confirmação iniciar jogo);
+            AudioDialog.clip = AudiosRadio[0];//(audio confirmação iniciar jogo);
             AudioDialog.Play();
             Debug.Log("AUDIO LOG > Confirmação de início");
             gamestate = 1;
         }
         else if(gamestate == 1 && gamestarted == true)
         {
-            AudioDialog.Stop();
-            //AudioDialog.clip = (audio introdução + fala pra swipe)
-            AudioDialog.Play();
+           AudioDialog.Stop();
+            AudioDialog.clip = AudiosRadio[1];//(audio introdução + fala pra swipe)
+          AudioDialog.Play();
             Debug.Log("AUDIO LOG > Introdução tutorial swipe");
             if (AudioAmbient.isPlaying)
             {
@@ -117,30 +121,33 @@ public class Regrador : MonoBehaviour
             if (AudioDialog.isPlaying == false)
             {
                 AudioDialog.Stop();
-                //AudioDialog.clip = (audio fala pra interagir)
+                AudioDialog.clip = AudiosRadio[2];//(audio fala pra interagir)
                 AudioDialog.Play();
                 Debug.Log("AUDIO LOG > tutorial interagir");
                 gamestate = 3;
+                caninteract = true;
             }
         }
         else if (gamestate == 3 && vt_interact == true)
         { if (AudioDialog.isPlaying == false)
             {
                 AudioDialog.Stop();
-                //AudioDialog.clip = (audio fala pra lookup)
+                AudioDialog.clip = AudiosRadio[3];//(audio fala pra lookup)
                 AudioDialog.Play();
                 Debug.Log("AUDIO LOG > Tutorial lookup");
                 gamestate = 4;
+                canlookup = true;
             }
         }
-        else if (gamestate == 4 && vt_lookup == true)
+        else if (gamestate == 4 && vt_lookup == true && looking == false)
         { if (AudioDialog.isPlaying == false)
             {
                 AudioDialog.Stop();
-                //AudioDialog.clip = (audio fala pra resolver o enigma)
+                AudioDialog.clip = AudiosRadio[4];//(audio fala pra resolver o enigma)
                 AudioDialog.Play();
                 Debug.Log("AUDIO LOG > Tutorial: termine o enigma");
                 gamestate = 5;
+                
             }
         }
         else if (gamestate == 5 && vt_tutorial_solved == true)
@@ -148,7 +155,7 @@ public class Regrador : MonoBehaviour
             if (AudioDialog.isPlaying == false)
             {
                 AudioDialog.Stop();
-                //AudioDialog.clip = (Audio finalização tutorial e introdução fase 1)
+                AudioDialog.clip = AudiosRadio[5];//(Audio finalização tutorial e introdução fase 1)
                 AudioDialog.Play();
                 Debug.Log("AUDIO LOG > Fim tutorial e introdução fase 1");
 
@@ -170,16 +177,15 @@ public class Regrador : MonoBehaviour
             if (AudioDialog.isPlaying == false)
             {
                 AudioDialog.Stop();
-                //AudioDialog.clip = (Audio finalização fase 1 e introdução fase 2)
+                AudioDialog.clip = AudiosRadio[6];//(Audio finalização fase 1 e introdução fase 2)
                 AudioDialog.Play();
                 Debug.Log("AUDIO LOG > fim fase 1 e introdução fase 2");
-                if (AudioAmbient.isPlaying)
-                {
-                    AudioAmbient.Stop();
-                }
+                AudioAmbient.Stop();
                 AudioAmbient.clip = AmbientClips[2];
                 AudioAmbient.Play();
                 Debug.Log("AUDIO LOG > Ambiente fase 2");
+                fase = 2;
+                UpdateObjetos();
                 gamestate = 7;
             }
             
@@ -189,11 +195,8 @@ public class Regrador : MonoBehaviour
             if (AudioDialog.isPlaying == false)
             {
                 AudioDialog.Stop();
-                if (AudioAmbient.isPlaying)
-                {
-                    AudioAmbient.Stop();
-                }
-                //AudioDialog.clip = (Audio finalização fase 2, agradecimento, toque simples para sair )
+                AudioAmbient.Stop();
+                AudioDialog.clip = AudiosRadio[7];//(Audio finalização fase 2, agradecimento, toque simples para sair )
                 AudioDialog.Play();
                 Debug.Log("AUDIO LOG > fim do jogo");
                 gamestate = 8;
@@ -201,10 +204,6 @@ public class Regrador : MonoBehaviour
                 canlookup = false;
                 canswipe = false;
             }
-        }
-        else if (gamestate == 8 && sair == true)
-        {
-            Application.Quit();
         }
     }
 
@@ -287,33 +286,18 @@ public class Regrador : MonoBehaviour
 
             objFase[0] = tempobj[1]; // item 1 = madeira
             objFase[1] = tempobj[0]; // item 2 = palha
-            objFase[2] = tempobj[3]; // item 3 = metal
-            objFase[3] = tempobj[2]; // item 4 = vidro
+            objFase[2] = tempobj[2]; // item 3 = vidro
+            objFase[3] = tempobj[3]; // item 4 = metal
 
             Debug.Log(objFase[0].getValue() + "-" + objFase[1].getValue() + "-" + objFase[2].getValue() + "-" + objFase[3].getValue()); //DEBUG 
         } else
         if (fase == 2)
         {
-            Interativo[] tempobj = { objFase[0], objFase[1]};
 
-            foreach (Interativo it in objFase)
-            {
-                if (it.getValue() == "on")
-                {
-                    tempobj[0] = it;
-                    tempobj[2] = it;
-                }
-                else if (it.getValue() == "off")
-                {
-                    tempobj[1] = it;
-                    tempobj[3] = it;
-                }
-            }
-
-            objFase[0] = tempobj[0]; // item 1 = ON
-            objFase[1] = tempobj[1]; // item 2 = OFF
-            objFase[2] = tempobj[2]; // item 3 = ON
-            objFase[3] = tempobj[3]; // item 4 = OFF
+            objFase[0] = objetos[8]; // item 1 = ON
+            objFase[1] = objetos[9]; // item 2 = OFF
+            objFase[2] = objetos[8]; // item 3 = ON
+            objFase[3] = objetos[9]; // item 4 = OFF
 
             Debug.Log(objFase[0].getValue() + "-" + objFase[1].getValue() + "-" + objFase[2].getValue() + "-" + objFase[3].getValue()); //DEBUG 
         }
@@ -345,8 +329,8 @@ public class Regrador : MonoBehaviour
     {
         if (canswipe == true)
         {
-           
 
+            looking = false;
             if (CurrentPosition == 0) { CurrentPosition = 3; }
             else
             {
@@ -358,7 +342,7 @@ public class Regrador : MonoBehaviour
             Debug.Log("AUDIO LOG > move left");
             Debug.Log("STATE LOG > Posição: "+CurrentPosition.ToString());
         }
-        if (gamestate == 3) //                                        
+        if (gamestate == 2) //                                        
         {
             vt_swipe = true;
         }
@@ -369,6 +353,7 @@ public class Regrador : MonoBehaviour
     {
         if (canswipe == true)
         {
+            looking = false;
                 if (CurrentPosition == 3) { CurrentPosition = 0; }
                 else
                 {
@@ -380,6 +365,10 @@ public class Regrador : MonoBehaviour
             Debug.Log("AUDIO LOG > move right");
             Debug.Log("STATE LOG > Posição: " + CurrentPosition.ToString());
 
+        }
+        if (gamestate == 2) //                                        
+        {
+            vt_swipe = true;
         }
     }
 
@@ -395,7 +384,8 @@ public class Regrador : MonoBehaviour
         }
         else if (gamestate == 8)
         {
-            sair = true;
+            Debug.Log("sair");
+            Application.Quit();
         }
 
         if (caninteract == true)
@@ -410,6 +400,8 @@ public class Regrador : MonoBehaviour
                             carrying = true;
                             AudioDialog.clip = TutorialMoveInteract; //som de mover objeto no tutorial
                             Debug.Log("STATE LOG > pegou objeto");
+                            AudioDialog.clip = AudiosRadio[9];
+                            AudioDialog.Play();
                             WinCondition(fase);
                         }
                         else
@@ -418,6 +410,8 @@ public class Regrador : MonoBehaviour
                             Interativo temp = objFase[CurrentPosition];
                             objFase[CurrentPosition] = objFase[objcarry];
                             objFase[objcarry] = temp;
+                            AudioDialog.clip = AudiosRadio[8];
+                            AudioDialog.Play();
                             Debug.Log("STATE LOG > trocou objeto");
                             WinCondition(fase);
                         }
@@ -502,22 +496,75 @@ public class Regrador : MonoBehaviour
                     }
                 case 2:
                     {
-                        for (int i = CurrentPosition-1; i <= CurrentPosition+1; i++)
-                            if(objFase[CurrentPosition].getValue() == "on")
+                       /* for (int i = CurrentPosition-1; i <= CurrentPosition+1; i++)
+                            if(objFase[i].getValue() == "on")
                         {
-                            objFase[CurrentPosition].value = "off";
+                            objFase[i].value = "off";
                                 AudioDialog.Stop();
                                 AudioDialog.clip = AudioEnigma2[3];
                                 AudioDialog.Play();
                                 Debug.Log("AUDIO LOG > som desligando");
-                        }   else if(objFase[CurrentPosition].getValue() == "off")
+                        }   else if(objFase[i].getValue() == "off")
                             {
-                                objFase[CurrentPosition].value = "on";
+                                objFase[i].value = "on";
                                 AudioDialog.Stop();
                                 AudioDialog.clip = AudioEnigma2[2];
                                 AudioDialog.Play();
                                 Debug.Log("AUDIO LOG > som ligando");
+                            }*/
+
+                        if (CurrentPosition != 0 && CurrentPosition != 3)
+                        {
+                            if (objFase[CurrentPosition-1].getValue() == "off")
+                            {
+                                objFase[CurrentPosition - 1] = objetos[8];
+                            } else if (objFase[CurrentPosition - 1].getValue() == "on") { objFase[CurrentPosition - 1] = objetos[9]; }
+                            if (objFase[CurrentPosition + 1].getValue() == "off")
+                            {
+                                objFase[CurrentPosition + 1] = objetos[8];
                             }
+                            else if (objFase[CurrentPosition + 1].getValue() == "on") { objFase[CurrentPosition + 1] = objetos[9]; }
+                            if (objFase[CurrentPosition].getValue() == "off")
+                            {
+                                objFase[CurrentPosition] = objetos[8];
+                            }
+                            else if (objFase[CurrentPosition].getValue() == "on") { objFase[CurrentPosition] = objetos[9]; }
+                        } else if(CurrentPosition == 0)
+                        {
+                            if (objFase[3].getValue() == "off")
+                            {
+                                objFase[3] = objetos[8];
+                            }
+                            else if (objFase[3].getValue() == "on") { objFase[3] = objetos[9]; }
+                            if (objFase[CurrentPosition + 1].getValue() == "off")
+                            {
+                                objFase[CurrentPosition + 1] = objetos[8];
+                            }
+                            else if (objFase[CurrentPosition + 1].getValue() == "on") { objFase[CurrentPosition + 1] = objetos[9]; }
+                            if (objFase[CurrentPosition].getValue() == "off")
+                            {
+                                objFase[CurrentPosition] = objetos[8];
+                            }
+                            else if (objFase[CurrentPosition].getValue() == "on") { objFase[CurrentPosition] = objetos[9]; }
+                        }
+                        else if (CurrentPosition == 3)
+                        {
+                            if (objFase[CurrentPosition-1].getValue() == "off")
+                            {
+                                objFase[CurrentPosition-1] = objetos[8];
+                            }
+                            else if (objFase[CurrentPosition-1].getValue() == "on") { objFase[CurrentPosition-1] = objetos[9]; }
+                            if (objFase[0].getValue() == "off")
+                            {
+                                objFase[0] = objetos[8];
+                            }
+                            else if (objFase[0].getValue() == "on") { objFase[0] = objetos[9]; }
+                            if (objFase[CurrentPosition].getValue() == "off")
+                            {
+                                objFase[CurrentPosition] = objetos[8];
+                            }
+                            else if (objFase[CurrentPosition].getValue() == "on") { objFase[CurrentPosition] = objetos[9]; }
+                        }
                         WinCondition(fase);
                         break;
                     }
@@ -527,82 +574,153 @@ public class Regrador : MonoBehaviour
 
     private void lookup()
     {
-
+        looking = true;
+        if (gamestate == 4)
+        {
+            vt_lookup = true;
+        }
         if (canlookup == true)
         {
-
+            
             AudioDialog.Stop();
+            
 
-            if (fase == 0 || fase == 1)
-            {
 
-                //5 é liberado para outro lookup
+               
                 AudioDialog.clip = lookupaudios[fase];
                 AudioDialog.Play();
                 Debug.Log("AUDIO LOG > audio lookup fase");
-                StartCoroutine(lookuprotina()); //toca audio da fase inteiro
+                StartCoroutine(waiter());
+ 
+        }
+    }
 
+    IEnumerator waiter()
+    {
+        if (fase == 1) { yield return new WaitForSeconds(Convert.ToInt32(AudioDialog.clip.length) + 1); }
+        else { yield return new WaitForSeconds(Convert.ToInt32(AudioDialog.clip.length)); }
 
+        if (looking == true) {
+            if (fase == 0 || fase == 1)
+            {
                 AudioDialog.Stop();
                 AudioDialog.clip = objFase[0].audSolo;
                 AudioDialog.Play();
                 Debug.Log("AUDIO LOG > obj 1 = " + objFase[0].getValue());
 
-                StartCoroutine(lookuprotina()); //toca audio do obj 1
-
-
-                AudioDialog.Stop();
-                AudioDialog.clip = objFase[1].audSolo;
-                AudioDialog.Play();
-                Debug.Log("AUDIO LOG > obj 2 = " + objFase[1].getValue());
-
-                StartCoroutine(lookuprotina()); // toca audio do objeto 2
-
-                AudioDialog.Stop();
-                AudioDialog.clip = objFase[2].audSolo;
-                AudioDialog.Play();
-                Debug.Log("AUDIO LOG > obj 3 = " + objFase[2].getValue());
-
-                StartCoroutine(lookuprotina()); // toca audio do objeto 3
-
-                AudioDialog.Stop();
-                AudioDialog.clip = objFase[3].audSolo;
-                AudioDialog.Play();
-                Debug.Log("AUDIO LOG > obj 4 = " + objFase[3].getValue());
-
-                StartCoroutine(lookuprotina()); // toca audio do objeto 4
-            } else if(fase == 2)
-                {
-                AudioDialog.clip = lookupaudios[fase];
-                AudioDialog.Play();
-                Debug.Log("AUDIO LOG > audio lookup fase 2");
-                StartCoroutine(lookuprotina()); //temporizar fim do audio para ir pra próxima parte.
-
-                for (int i = 0; i <= 3; i++)
+                yield return new WaitForSeconds(Convert.ToInt32(AudioDialog.clip.length));
+                if (looking == true)
                 {
                     AudioDialog.Stop();
-                    if (objFase[i].value == "on")
+                    AudioDialog.clip = objFase[1].audSolo;
+                    AudioDialog.Play();
+                    Debug.Log("AUDIO LOG > obj 2 = " + objFase[1].getValue());
+
+                    yield return new WaitForSeconds(Convert.ToInt32(AudioDialog.clip.length));
+                    if (looking == true)
+                    {
+                        AudioDialog.Stop();
+                        AudioDialog.clip = objFase[2].audSolo;
+                        AudioDialog.Play();
+                        Debug.Log("AUDIO LOG > obj 3 = " + objFase[2].getValue());
+
+                        yield return new WaitForSeconds(Convert.ToInt32(AudioDialog.clip.length));
+                        if (looking == true)
+                        {
+                            AudioDialog.Stop();
+                            AudioDialog.clip = objFase[3].audSolo;
+                            AudioDialog.Play();
+                            Debug.Log("AUDIO LOG > obj 4 = " + objFase[3].getValue());
+
+                            yield return new WaitForSeconds(Convert.ToInt32(AudioDialog.clip.length));
+                        }
+                    }
+                }
+            }
+            else
+            {
+                AudioDialog.Stop();
+                if (objFase[0].value == "on")
+                {
+                    AudioDialog.clip = AudioEnigma2[0];
+                }
+                else if (objFase[0].value == "off")
+                {
+                    AudioDialog.clip = AudioEnigma2[1];
+                }
+                AudioDialog.Play();
+                Debug.Log("AUDIO LOG > obj 1 = " + objFase[0].getValue());
+
+                yield return new WaitForSeconds(Convert.ToInt32(AudioDialog.clip.length));
+                if (looking == true)
+                {
+                    AudioDialog.Stop();
+                    if (objFase[1].value == "on")
                     {
                         AudioDialog.clip = AudioEnigma2[0];
                     }
-                    else if (objFase[i].value == "off")
+                    else if (objFase[1].value == "off")
                     {
                         AudioDialog.clip = AudioEnigma2[1];
                     }
                     AudioDialog.Play();
-                    Debug.Log("AUDIO LOG > obj " + i.ToString() + " = " +objFase[i].getValue());
+                    Debug.Log("AUDIO LOG > obj 2 = " + objFase[1].getValue());
 
-                    StartCoroutine(lookuprotina());
+                    yield return new WaitForSeconds(Convert.ToInt32(AudioDialog.clip.length));
+                    if (looking == true)
+                    {
+                        AudioDialog.Stop();
+                        if (objFase[2].value == "on")
+                        {
+                            AudioDialog.clip = AudioEnigma2[0];
+                        }
+                        else if (objFase[2].value == "off")
+                        {
+                            AudioDialog.clip = AudioEnigma2[1];
+                        }
+                        AudioDialog.Play();
+                        Debug.Log("AUDIO LOG > obj 3 = " + objFase[2].getValue());
+
+                        yield return new WaitForSeconds(Convert.ToInt32(AudioDialog.clip.length));
+                        if (looking == true)
+                        {
+                            AudioDialog.Stop();
+                            if (objFase[3].value == "on")
+                            {
+                                AudioDialog.clip = AudioEnigma2[0];
+                            }
+                            else if (objFase[3].value == "off")
+                            {
+                                AudioDialog.clip = AudioEnigma2[1];
+                            }
+                            AudioDialog.Play();
+                            Debug.Log("AUDIO LOG > obj 4 = " + objFase[3].getValue());
+
+                            yield return new WaitForSeconds(Convert.ToInt32(AudioDialog.clip.length));
+                        }
+                    }
                 }
-                
-                }
+            }
+            /* AudioDialog.Stop();
+              if (objFase[0].value == "on")
+              {
+                  AudioDialog.clip = AudioEnigma2[0];
+              }
+              else if (objFase[0].value == "off")
+              {
+                  AudioDialog.clip = AudioEnigma2[1];
+              }
+              AudioDialog.Play();
+              Debug.Log("AUDIO LOG > obj " + i.ToString() + " = " + objFase[i].getValue());
+
+              yield return new WaitForSeconds(Convert.ToInt32(AudioDialog.clip.length));
+
+              */
+
+
 
         }
-    }
-
-    IEnumerator lookuprotina()
-    {
-        yield return new WaitForSeconds(AudioDialog.clip.length);
+        looking = false;
     }
 
 
@@ -647,7 +765,8 @@ public class Regrador : MonoBehaviour
 
 
 
-
+   
+   
 
 
 
@@ -682,7 +801,7 @@ public class Regrador : MonoBehaviour
                 currentSwipe.Normalize();
 
                 //swipe upwards
-                if (currentSwipe.y > 0 && currentSwipe.x > -0.5f && currentSwipe.x < 0.5f)
+                if (currentSwipe.y > 0 && currentSwipe.x > -0.7f && currentSwipe.x < 0.7f)
                 {
                     lookup();
                     Debug.Log("up swipe");
@@ -706,7 +825,7 @@ public class Regrador : MonoBehaviour
                 }
                 if (currentSwipe.x == 0 && currentSwipe.y == 0)
                 {
-                    
+                    interact();
                     Debug.Log("single tocuh");
                 }
             }
